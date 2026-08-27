@@ -45,3 +45,12 @@ Then open `http://localhost:3000/`.
 The app is intentionally simple: Express serves the static frontend and HTTP API; Socket.IO handles the live game state; game state is held in memory. There is no account system or database in the MVP.
 
 For public deployment, put it behind HTTPS/reverse proxy, and consider adding rate limiting, persistent quiz/session storage, authentication for hosts, and horizontal scaling if you expect very large concurrent events.
+### Joining after the quiz starts
+Players can join any active game until it reaches the final results. A player who joins during a question receives the current question and can answer it normally. A player who joins during the results screen sees the current results and can participate in the next question. New players start with 0 points.
+
+
+## Reconnect sessions
+
+Hosts and players receive a random reconnect session ID stored in the browser's localStorage. If the network drops, the browser refreshes, or the tab is accidentally closed, reopening the same page within the reconnect window restores the same game identity and score.
+
+By default disconnected sessions expire after 5 minutes. Override this with the `SESSION_TTL_MS` environment variable, for example `SESSION_TTL_MS=600000` for 10 minutes. If the host remains disconnected beyond the timeout, the game room is closed. Player profiles that remain disconnected beyond the timeout are removed.

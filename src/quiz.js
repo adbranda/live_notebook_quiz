@@ -53,13 +53,21 @@ export function parseQuizCsv(text) {
     const row = rows[r];
     if (row.every(cell => !clean(cell))) continue;
     if (row.length < REQUIRED.length) throw new Error(`Row ${r + 1} has too few columns.`);
-    const answer = clean(row[7]).toUpperCase();
+    const correctAnswerRaw = clean(row[7]);
+    const match = correctAnswerRaw.match(/^([ABCD])\.\s*(.+)$/i);
+    if (!match) throw new Error(`Row ${r + 1}: Correct Answer must be in the format \"B. Paris\" (A-D followed by a period and the answer text).`);
+    const answerLetter = match[1].toUpperCase();
+    const answerText = clean(match[2]);
+    const options = { A: clean(row[3]), B: clean(row[4]), C: clean(row[5]), D: clean(row[6]) };
+    if (answerText !== options[answerLetter]) {
+      throw new Error(`Row ${r + 1}: Correct Answer \"${correctAnswerRaw}\" does not match Option ${answerLetter} \"${options[answerLetter]}\".`);
+    }
     questions.push({
       number: clean(row[0]) || String(questions.length + 1),
       question: clean(row[1]),
       hint: clean(row[2]),
-      options: { A: clean(row[3]), B: clean(row[4]), C: clean(row[5]), D: clean(row[6]) },
-      correctAnswer: answer,
+      options,
+      correctAnswer: answerLetter,
       rationale: clean(row[8])
     });
   }
