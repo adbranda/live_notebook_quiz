@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import { parseQuizCsv, validateQuiz } from '../src/quiz.js';
+
+const csv = `"#","Question","Hint","Option A","Option B","Option C","Option D","Correct Answer","Rationale"\n"1","What is 2 + 2?","Add the two numbers.","3","4","5","6","B","Two plus two is four."`;
+const quiz = parseQuizCsv(csv);
+assert.equal(quiz.questions.length, 1);
+assert.equal(quiz.questions[0].correctAnswer, 'B');
+assert.equal(quiz.questions[0].options.B, '4');
+validateQuiz(quiz);
+
+assert.throws(
+  () => validateQuiz({ questions: [{ question: 'Q', hint: '', rationale: 'R', options: { A: 'a', B: 'b', C: 'c', D: 'd' }, correctAnswer: 'A' }] }),
+  /Hint is empty/
+);
+
+console.log('quiz parser tests passed');
