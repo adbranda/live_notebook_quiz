@@ -72,7 +72,10 @@ function endQuestion(room) {
   }
   room.state = 'results';
   room.lastResult = {
-    correctAnswer: q.correctAnswer, rationale: q.rationale, answerCounts: room.answerCounts,
+    question: q.question,
+    correctAnswer: q.correctAnswer,
+    correctAnswerText: q.options[q.correctAnswer],
+    rationale: q.rationale, answerCounts: room.answerCounts,
     leaderboard: [...room.players.values()].sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).map((p,index)=>({ rank:index+1,id:p.id,name:p.name,score:p.score,pointsThisRound:p.pointsThisRound||0 }))
   };
   emitToRoom(room, 'question:ended', room.lastResult);
