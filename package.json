@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
+    "build": "node scripts/build.js",
+    "format": "prettier --write \"public/**/*.{html,css,js}\" \"src/**/*.js\" \"scripts/**/*.js\"",
     "test": "node --test test/*.test.js"
   },
   "dependencies": {
@@ -13,5 +15,10 @@
     "multer": "^2.0.2",
     "qrcode": "^1.5.4",
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "html-minifier-terser": "^7.2.0",
+    "prettier": "^3.9.6"
   }
 }
